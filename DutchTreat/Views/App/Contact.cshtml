@@ -2,20 +2,29 @@
 @{ 
     ViewBag.Title = "Contact Us";
 }
+@section scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
 <form method="post">
+    <div asp-validation-summary="ModelOnly"></div>
     <label asp-for="Name">Your Name: </label>
     <br />
     <input asp-for="Name" />
+    <span asp-validation-for="Name"></span>
     <br />
     <label asp-for="Email">Email: </label>
+    <span asp-validation-for="Email"></span>
     <br />
     <input type="email" asp-for="Email" />
     <br />
     <label asp-for="Subject">Subject: </label>
+    <span asp-validation-for="Subject"></span>
     <br />
     <input type="text" asp-for="Subject" />
     <br />
     <label asp-for="Message">Message: </label>
+    <span asp-validation-for="Message"></span>
     <br />
     <textarea rows="4" asp-for="Message"></textarea>
     <br />
