@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Views\App\About.cshtml" />
     <None Include="wwwroot\index.html" />
   </ItemGroup>
 
