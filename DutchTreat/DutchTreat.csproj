@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <None Include="Views\App\About.cshtml" />
+    <None Include="Views\App\Shop.cshtml" />
     <None Include="wwwroot\index.html" />
   </ItemGroup>
 
