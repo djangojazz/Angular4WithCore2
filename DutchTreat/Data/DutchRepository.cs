@@ -18,6 +18,11 @@ namespace DutchTreat.Data
             _ctx = ctx;
             _logger = logger;
         }
+        
+        public void AddEntity(object model)
+        {
+            _ctx.Add(model);
+        }
 
         public IEnumerable<Order> GetAllOrders()
         {
@@ -53,5 +58,6 @@ namespace DutchTreat.Data
         public IEnumerable<Product> GetProductsByCategory(string category) => _ctx.Products.Where(x => x.Category == category).ToList();
 
         public bool SaveAll() => _ctx.SaveChanges() > 0;
+
     }
 }
