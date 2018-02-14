@@ -6,12 +6,14 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using DutchTreat.Services;
 using DutchTreat.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using AutoMapper;
+using DutchTreat.Data.Entities;
 
 namespace DutchTreat
 {
@@ -28,12 +30,21 @@ namespace DutchTreat
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<StoreUser, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<DutchContext>();
+
             services.AddDbContext<DutchContext>(cfg =>
             {
                 cfg.UseSqlServer(_config.GetConnectionString("DutchConnectionString"));
             });
 
-            services.AddAutoMapper();
+            if(!services.Any(a => a.ImplementationType == typeof(IMapper)))
+            {
+                services.AddAutoMapper();
+            }
 
             services.AddTransient<IMailService, NullMailService>();
             services.AddTransient<DutchSeeder>();
@@ -71,7 +82,7 @@ namespace DutchTreat
                 using (var scope = app.ApplicationServices.CreateScope())
                 {
                     var seeder = scope.ServiceProvider.GetService<DutchSeeder>();
-                    seeder.Seed();
+                    seeder.Seed().Wait();
                 }
             }
         }

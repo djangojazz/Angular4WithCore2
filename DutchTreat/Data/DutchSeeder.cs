@@ -1,12 +1,13 @@
-﻿using DutchTreat.Data.Entities;
-using Microsoft.AspNetCore.Hosting;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DutchTreat.Data.Entities;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace DutchTreat.Data
 {
@@ -14,19 +15,43 @@ namespace DutchTreat.Data
     {
         private readonly DutchContext _ctx;
         private readonly IHostingEnvironment _hosting;
+        private readonly UserManager<StoreUser> _userManager;
 
-        public DutchSeeder(DutchContext ctx, IHostingEnvironment hosting)
+        public DutchSeeder(DutchContext ctx,
+          IHostingEnvironment hosting,
+          UserManager<StoreUser> userManager)
         {
             _ctx = ctx;
             _hosting = hosting;
+            _userManager = userManager;
         }
 
-        public void Seed()
+        public async Task Seed()
         {
             _ctx.Database.EnsureCreated();
-            if(!_ctx.Products.Any())
+
+            var user = await _userManager.FindByEmailAsync("brett@dutchtreat.com");
+
+            if (user == null)
             {
-                //Need to create sample data
+                user = new StoreUser()
+                {
+                    FirstName = "Brett",
+                    LastName = "Morin",
+                    UserName = "brett@dutchtreat.com",
+                    Email = "brett@dutchtreat.com"
+                };
+
+                var result = await _userManager.CreateAsync(user, "P@ssw0rd!");
+                if (result != IdentityResult.Success)
+                {
+                    throw new InvalidOperationException("Failed to create default user");
+                }
+            }
+
+            if (!_ctx.Products.Any())
+            {
+                // Need to create sample data
                 var filepath = Path.Combine(_hosting.ContentRootPath, "Data/art.json");
                 var json = File.ReadAllText(filepath);
                 var products = JsonConvert.DeserializeObject<IEnumerable<Product>>(json);
@@ -36,13 +61,14 @@ namespace DutchTreat.Data
                 {
                     OrderDate = DateTime.Now,
                     OrderNumber = "12345",
-                    Items = new List<OrderItem>
+                    User = user,
+                    Items = new List<OrderItem>()
                     {
                         new OrderItem()
                         {
-                            Product = products.First(),
-                            Quantity = 5,
-                            UnitPrice = products.First().Price
+                          Product = products.First(),
+                          Quantity = 5,
+                          UnitPrice = products.First().Price
                         }
                     }
                 };
