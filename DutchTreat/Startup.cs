@@ -69,6 +69,8 @@ namespace DutchTreat
             
             app.UseStaticFiles();
 
+            app.UseAuthentication();
+
             app.UseMvc(cfg =>
             {
                 cfg.MapRoute("Default", 
