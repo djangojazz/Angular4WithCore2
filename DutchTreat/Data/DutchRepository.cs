@@ -24,13 +24,10 @@ namespace DutchTreat.Data
             _ctx.Add(model);
         }
 
-        public IEnumerable<Order> GetAllOrders()
-        {
-            return _ctx.Orders
-                .Include(o => o.Items)
-                .ThenInclude(i => i.Product)
-                .ToList();
-        }
+        public IEnumerable<Order> GetAllOrders(bool includeItems) => includeItems 
+            ? _ctx.Orders.Include(o => o.Items).ThenInclude(i => i.Product).ToList() 
+            : _ctx.Orders.ToList();
+        
 
         public Order GetOrderById(int id)
         {
