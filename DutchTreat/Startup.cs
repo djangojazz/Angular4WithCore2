@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using AutoMapper;
 using DutchTreat.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace DutchTreat
 {
@@ -38,6 +40,19 @@ namespace DutchTreat
                 cfg.User.RequireUniqueEmail = true;
             })
             .AddEntityFrameworkStores<DutchContext>();
+
+            services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = _config["Tokens:Issuer"],
+                        ValidAudience = _config["Tokens:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]))
+                    };
+
+                });
 
             services.AddDbContext<DutchContext>(cfg =>
             {
