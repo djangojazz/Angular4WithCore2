@@ -27,16 +27,18 @@ namespace DutchTreat.Data
         public IEnumerable<Order> GetAllOrders(bool includeItems) => includeItems 
             ? _ctx.Orders.Include(o => o.Items).ThenInclude(i => i.Product).ToList() 
             : _ctx.Orders.ToList();
-        
 
-        public Order GetOrderById(int id)
-        {
-            return _ctx.Orders
+        public IEnumerable<Order> GetAllOrdersByUser(string username, bool includeItems) => includeItems
+            ? _ctx.Orders.Where(x => x.User.UserName == username).Include(o => o.Items).ThenInclude(i => i.Product).ToList()
+            : _ctx.Orders.Where(x => x.User.UserName == username).ToList();
+
+
+        public Order GetOrderById(string username, int id) =>_ctx.Orders
                 .Include(o => o.Items)
                 .ThenInclude(i => i.Product)
-                .Where(o => o.Id == id)
+                .Where(o => o.Id == id && o.User.UserName == username)
                 .FirstOrDefault();
-        }
+        
 
         public IEnumerable<Product> GetAllProducts()
         {
