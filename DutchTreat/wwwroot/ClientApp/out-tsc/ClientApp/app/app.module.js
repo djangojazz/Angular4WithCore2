@@ -10,6 +10,7 @@ var platform_browser_1 = require("@angular/platform-browser");
 var core_1 = require("@angular/core");
 var app_component_1 = require("./app.component");
 var productList_component_1 = require("./shop/productList.component");
+var dataService_1 = require("./shared/dataService");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -22,7 +23,7 @@ var AppModule = /** @class */ (function () {
             imports: [
                 platform_browser_1.BrowserModule
             ],
-            providers: [],
+            providers: [dataService_1.DataService],
             bootstrap: [app_component_1.AppComponent]
         })
     ], AppModule);

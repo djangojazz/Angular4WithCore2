@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { ProductList } from "./shop/productList.component";
+import { DataService } from "./shared/dataService";
 
 @NgModule({
   declarations: [
@@ -11,7 +12,7 @@ import { ProductList } from "./shop/productList.component";
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
