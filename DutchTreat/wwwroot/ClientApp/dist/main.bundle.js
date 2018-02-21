@@ -69,7 +69,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var platform_browser_1 = __webpack_require__("./node_modules/@angular/platform-browser/esm5/platform-browser.js");
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
-var http_1 = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
+var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
 var app_component_1 = __webpack_require__("./ClientApp/app/app.component.ts");
 var productList_component_1 = __webpack_require__("./ClientApp/app/shop/productList.component.ts");
 var dataService_1 = __webpack_require__("./ClientApp/app/shared/dataService.ts");
@@ -84,7 +84,7 @@ var AppModule = /** @class */ (function () {
             ],
             imports: [
                 platform_browser_1.BrowserModule,
-                http_1.HttpClientModule
+                http_1.HttpModule
             ],
             providers: [dataService_1.DataService],
             bootstrap: [app_component_1.AppComponent]
@@ -112,7 +112,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var http_1 = __webpack_require__("./node_modules/@angular/common/esm5/http.js");
+var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
 var DataService = /** @class */ (function () {
@@ -123,14 +123,11 @@ var DataService = /** @class */ (function () {
     DataService.prototype.loadProducts = function () {
         var _this = this;
         return this.http.get("/api/products")
-            .map(function (data) {
-            _this.products = data;
-            return true;
-        });
+            .map(function (result) { return _this.products = result.json(); });
     };
     DataService = __decorate([
         core_1.Injectable(),
-        __metadata("design:paramtypes", [http_1.HttpClient])
+        __metadata("design:paramtypes", [http_1.Http])
     ], DataService);
     return DataService;
 }());
@@ -167,15 +164,12 @@ var ProductList = /** @class */ (function () {
     function ProductList(data) {
         this.data = data;
         this.products = [];
+        this.products = data.products;
     }
     ProductList.prototype.ngOnInit = function () {
         var _this = this;
         this.data.loadProducts()
-            .subscribe(function (success) {
-            if (success) {
-                _this.products = _this.data.products;
-            }
-        });
+            .subscribe(function () { return _this.products = _this.data.products; });
     };
     ProductList = __decorate([
         core_1.Component({

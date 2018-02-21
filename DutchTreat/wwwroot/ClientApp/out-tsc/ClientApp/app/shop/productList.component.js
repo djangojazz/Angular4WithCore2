@@ -15,15 +15,12 @@ var ProductList = /** @class */ (function () {
     function ProductList(data) {
         this.data = data;
         this.products = [];
+        this.products = data.products;
     }
     ProductList.prototype.ngOnInit = function () {
         var _this = this;
         this.data.loadProducts()
-            .subscribe(function (success) {
-            if (success) {
-                _this.products = _this.data.products;
-            }
-        });
+            .subscribe(function () { return _this.products = _this.data.products; });
     };
     ProductList = __decorate([
         core_1.Component({
