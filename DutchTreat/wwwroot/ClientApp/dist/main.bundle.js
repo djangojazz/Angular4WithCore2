@@ -133,17 +133,22 @@ var DataService = /** @class */ (function () {
         if (!this.order) {
             this.order = new order_1.Order();
         }
-        var item;
-        item = new order_1.OrderItem();
-        item.productId = product.id;
-        item.productArtist = product.artist;
-        item.productCategory = product.category;
-        item.productArtId = product.artId;
-        item.productTitle = product.title;
-        item.productSize = product.size;
-        item.unitPrice = product.price;
-        item.quantity = 1;
-        this.order.items.push(item);
+        var item = this.order.items.find(function (i) { return i.productId == product.id; });
+        if (item) {
+            item.quantity++;
+        }
+        else {
+            item = new order_1.OrderItem();
+            item.productId = product.id;
+            item.productArtist = product.artist;
+            item.productCategory = product.category;
+            item.productArtId = product.artId;
+            item.productTitle = product.title;
+            item.productSize = product.size;
+            item.unitPrice = product.price;
+            item.quantity = 1;
+            this.order.items.push(item);
+        }
     };
     DataService = __decorate([
         core_1.Injectable(),
@@ -183,7 +188,7 @@ exports.OrderItem = OrderItem;
 /***/ "./ClientApp/app/shop/cart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h3>Shopping Cart</h3>\r\n<div>Count: {{data.order.items.length }}</div>"
+module.exports = "<h3>Shopping Cart</h3>\r\n<div>#/Items: {{data.order.items.length }}</div>\r\n<table class=\"table table-condensed table-hover\">\r\n    <thead>\r\n        <tr>\r\n            <td>Product</td>\r\n            <td>#</td>\r\n            <td>$</td>\r\n            <td>Total</td>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr *ngFor=\"let o of data.order.items\">\r\n            <td>{{o.productCategory }} - {{o.productTitle}} </td>\r\n            <td>{{o.quantity }}</td>\r\n            <td>{{o.unitPrice | currency:\"USD\":true }}</td>\r\n            <td>{{ (o.unitPrice * o.quantity) | currency:\"USD\":true }}</td>\r\n        </tr>\r\n    </tbody>\r\n</table>"
 
 /***/ }),
 
