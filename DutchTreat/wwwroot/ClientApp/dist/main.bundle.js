@@ -78,6 +78,7 @@ var checkout_component_1 = __webpack_require__("./ClientApp/app/checkout/checkou
 var login_component_1 = __webpack_require__("./ClientApp/app/login/login.component.ts");
 var dataService_1 = __webpack_require__("./ClientApp/app/shared/dataService.ts");
 var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+var forms_1 = __webpack_require__("./node_modules/@angular/forms/esm5/forms.js");
 var routes = [
     { path: "", component: shop_component_1.Shop },
     { path: "checkout", component: checkout_component_1.Checkout },
@@ -99,6 +100,7 @@ var AppModule = /** @class */ (function () {
             imports: [
                 platform_browser_1.BrowserModule,
                 http_1.HttpModule,
+                forms_1.FormsModule,
                 router_1.RouterModule.forRoot(routes, {
                     useHash: true,
                     enableTracing: true // for Debugging of the Routes
@@ -172,7 +174,7 @@ exports.Checkout = Checkout;
 /***/ "./ClientApp/app/login/login.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\r\n    <div class=\"col-md-4 col-md-offset-4\">\r\n        <form>\r\n            <div class=\"form-group\">\r\n                <label for=\"username\">Username</label>\r\n                <input type=\"text\" class=\"form-control\" name=\"username\" />\r\n            </div>\r\n            <div class=\"form-group\">\r\n                <label for=\"password\">Password</label>\r\n                <input type=\"password\" class=\"form-control\" name=\"password\" />\r\n            </div>\r\n            <div class=\"form-group\">\r\n                <input type=\"submit\" class=\"btn btn-success\" value=\"Login\" />\r\n                <a href=\"#\" class=\"btn btn-default\">Cancel</a>\r\n            </div>\r\n        </form>\r\n    </div>\r\n</div>"
+module.exports = "<div class=\"row\">\r\n    <div class=\"col-md-4 col-md-offset-4\">\r\n        <form (submit)=\"onLogin()\">\r\n            <div class=\"form-group\">\r\n                <label for=\"username\">Username</label>\r\n                <input type=\"text\" class=\"form-control\" name=\"username\" [(ngModel)]=\"creds.username\" />\r\n            </div>\r\n            <div class=\"form-group\">\r\n                <label for=\"password\">Password</label>\r\n                <input type=\"password\" class=\"form-control\" name=\"password\" [(ngModel)]=\"creds.password\" />\r\n            </div>\r\n            <div class=\"form-group\">\r\n                <input type=\"submit\" class=\"btn btn-success\" value=\"Login\" />\r\n                <a routerLink=\"/\" class=\"btn btn-default\">Cancel</a>\r\n            </div>\r\n        </form>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -187,16 +189,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var dataService_1 = __webpack_require__("./ClientApp/app/shared/dataService.ts");
+var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 var Login = /** @class */ (function () {
-    function Login() {
+    function Login(data, router) {
+        this.data = data;
+        this.router = router;
+        this.creds = {
+            username: "",
+            password: ""
+        };
     }
+    Login.prototype.onLogin = function () {
+        //Call the login service
+        alert(this.creds.username);
+        this.creds.username += "!";
+    };
     Login = __decorate([
         core_1.Component({
             selector: "login",
             template: __webpack_require__("./ClientApp/app/login/login.component.html")
-        })
+        }),
+        __metadata("design:paramtypes", [dataService_1.DataService, router_1.Router])
     ], Login);
     return Login;
 }());
