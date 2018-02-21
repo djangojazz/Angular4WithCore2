@@ -117,15 +117,33 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var http_1 = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
+var order_1 = __webpack_require__("./ClientApp/app/shared/order.ts");
 var DataService = /** @class */ (function () {
     function DataService(http) {
         this.http = http;
+        this.order = new order_1.Order();
         this.products = [];
     }
     DataService.prototype.loadProducts = function () {
         var _this = this;
         return this.http.get("/api/products")
             .map(function (result) { return _this.products = result.json(); });
+    };
+    DataService.prototype.AddToOrder = function (product) {
+        if (!this.order) {
+            this.order = new order_1.Order();
+        }
+        var item;
+        item = new order_1.OrderItem();
+        item.productId = product.id;
+        item.productArtist = product.artist;
+        item.productCategory = product.category;
+        item.productArtId = product.artId;
+        item.productTitle = product.title;
+        item.productSize = product.size;
+        item.unitPrice = product.price;
+        item.quantity = 1;
+        this.order.items.push(item);
     };
     DataService = __decorate([
         core_1.Injectable(),
@@ -138,10 +156,34 @@ exports.DataService = DataService;
 
 /***/ }),
 
+/***/ "./ClientApp/app/shared/order.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+var Order = /** @class */ (function () {
+    function Order() {
+        this.orderDate = new Date();
+        this.items = new Array();
+    }
+    return Order;
+}());
+exports.Order = Order;
+var OrderItem = /** @class */ (function () {
+    function OrderItem() {
+    }
+    return OrderItem;
+}());
+exports.OrderItem = OrderItem;
+
+
+/***/ }),
+
 /***/ "./ClientApp/app/shop/cart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h3>Shopping Cart</h3>"
+module.exports = "<h3>Shopping Cart</h3>\r\n<div>Count: {{data.order.items.length }}</div>"
 
 /***/ }),
 
@@ -191,7 +233,7 @@ module.exports = ".product-info img {\r\n    max-width: 100px;\r\n    float: lef
 /***/ "./ClientApp/app/shop/productList.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\r\n    <div class=\"product-info col-md-4 well well-sm\" *ngFor=\"let p of products\" >\r\n        <img src=\"/img/{{p.artId}}.jpg\" class=\"img-responsive\" [alt]=\"p.title\" />\r\n        <div class=\"product-name\">{{p.category}} - {{p.size}}</div>\r\n            <div><strong>Price</strong> {{p.price | currency:\"USD\":true}}</div>\r\n            <div><strong>Artist</strong> {{p.artist}}</div>\r\n            <div><strong>Title</strong> {{p.title}}</div>\r\n            <div>Description: {{p.artDescription}}</div>\r\n        <button id=\"buyButton\" class=\"btn btn-success btn-sm pull-right\">Buy</button>\r\n    </div>\r\n</div>"
+module.exports = "<div class=\"row\">\r\n    <div class=\"product-info col-md-4 well well-sm\" *ngFor=\"let p of products\" >\r\n        <img src=\"/img/{{p.artId}}.jpg\" class=\"img-responsive\" [alt]=\"p.title\" />\r\n        <div class=\"product-name\">{{p.category}} - {{p.size}}</div>\r\n            <div><strong>Price</strong> {{p.price | currency:\"USD\":true}}</div>\r\n            <div><strong>Artist</strong> {{p.artist}}</div>\r\n            <div><strong>Title</strong> {{p.title}}</div>\r\n            <div>Description: {{p.artDescription}}</div>\r\n        <button id=\"buyButton\" class=\"btn btn-success btn-sm pull-right\" (click)=\"addProduct(p)\">Buy</button>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -222,6 +264,9 @@ var ProductList = /** @class */ (function () {
         var _this = this;
         this.data.loadProducts()
             .subscribe(function () { return _this.products = _this.data.products; });
+    };
+    ProductList.prototype.addProduct = function (product) {
+        this.data.AddToOrder(product);
     };
     ProductList = __decorate([
         core_1.Component({

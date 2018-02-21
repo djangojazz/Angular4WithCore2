@@ -12,6 +12,7 @@ var http_1 = require("@angular/http");
 var app_component_1 = require("./app.component");
 var productList_component_1 = require("./shop/productList.component");
 var dataService_1 = require("./shared/dataService");
+var cart_component_1 = require("./shop/cart.component");
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -19,7 +20,8 @@ var AppModule = /** @class */ (function () {
         core_1.NgModule({
             declarations: [
                 app_component_1.AppComponent,
-                productList_component_1.ProductList
+                productList_component_1.ProductList,
+                cart_component_1.Cart
             ],
             imports: [
                 platform_browser_1.BrowserModule,
