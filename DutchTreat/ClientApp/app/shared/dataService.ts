@@ -1,4 +1,4 @@
-﻿import { Http, Response } from "@angular/http";
+﻿import { Http, Response, Headers } from "@angular/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs"
 import 'rxjs/add/operator/map';
@@ -30,6 +30,19 @@ export class DataService {
                 let tokenInfo = response.json();
                 this.token = tokenInfo.token;
                 this.tokenExpiration = tokenInfo.expiration;
+                return true;
+            });
+    }
+
+    public checkout() {
+        if (!this.order.orderNumber) {
+            this.order.orderNumber = this.order.orderDate.getFullYear().toString() + this.order.orderDate.getTime().toString();
+        }
+        return this.http.post("/api/orders", this.order, {
+            headers: new Headers({ "Authorization": "Bearer " + this.token })
+            })
+            .map(response => {
+                this.order = new Order();
                 return true;
             });
     }

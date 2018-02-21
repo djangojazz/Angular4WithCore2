@@ -38,7 +38,19 @@ namespace DutchTreat.Data
                 .ThenInclude(i => i.Product)
                 .Where(o => o.Id == id && o.User.UserName == username)
                 .FirstOrDefault();
-        
+
+
+        public void AddOrder(Order newOrder)
+        {
+            //Convert new products to lookup of products
+            foreach (var item in newOrder.Items)
+            {
+                item.Product = _ctx.Products.Find(item.Product.Id);
+            }
+
+            AddEntity(newOrder);
+        }
+
 
         public IEnumerable<Product> GetAllProducts()
         {

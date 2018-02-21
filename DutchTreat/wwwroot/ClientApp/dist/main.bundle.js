@@ -127,7 +127,7 @@ module.exports = ".checkout-thumb {\n  max-width: 100px;\n}\n"
 /***/ "./ClientApp/app/checkout/checkout.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <h3>Confirm Order</h3>\n  <table class=\"table table-bordered table-hover\">\n    <tr *ngFor=\"let o of data.order.items\">\n      <td><img src=\"/img/{{ o.productArtId }}.jpg\" alt=\"o.productTitle\" class=\"img-thumbnail checkout-thumb\" /></td>\n      <td>{{ o.productCategory }}({{ o.productSize }}) - {{ o.productArtist }}: {{ o.productTitle }}</td>\n      <td>{{ o.quantity }}</td>\n      <td>{{ o.unitPrice|currency:'USD':true }}</td>\n      <td>{{ (o.unitPrice * o.quantity)|currency:'USD':true }}</td>\n    </tr>\n  </table>\n  <div class=\"col-md-4 col-md-offset-8 text-right\">\n    <table class=\"table table-condensed\">\n      <tr>\n        <td class=\"text-right\">Subtotal</td>\n        <td class=\"text-right\">{{ data.order.subtotal|currency:'USD':true }}</td>\n      </tr>\n      <tr>\n        <td class=\"text-right\">Shipping</td>\n        <td class=\"text-right\">$ 0.00</td>\n      </tr>\n      <tr>\n        <td class=\"text-right\">Total:</td>\n        <td class=\"text-right\">{{ data.order.subtotal|currency:'USD':true }}</td>\n      </tr>\n    </table>\n    <button class=\"btn btn-success\" (click)=\"onCheckout()\">Complete Purchase</button>\n    <a routerLink=\"/\" class=\"btn btn-info\">Cancel</a>\n  </div>\n\n</div>"
+module.exports = "<div class=\"row\">\n    <div *ngIf=\"errorMessage\" class=\"alert alert-warning\">{{errorMessage}}</div>\n  <h3>Confirm Order</h3>\n  <table class=\"table table-bordered table-hover\">\n    <tr *ngFor=\"let o of data.order.items\">\n      <td><img src=\"/img/{{ o.productArtId }}.jpg\" alt=\"o.productTitle\" class=\"img-thumbnail checkout-thumb\" /></td>\n      <td>{{ o.productCategory }}({{ o.productSize }}) - {{ o.productArtist }}: {{ o.productTitle }}</td>\n      <td>{{ o.quantity }}</td>\n      <td>{{ o.unitPrice|currency:'USD':true }}</td>\n      <td>{{ (o.unitPrice * o.quantity)|currency:'USD':true }}</td>\n    </tr>\n  </table>\n  <div class=\"col-md-4 col-md-offset-8 text-right\">\n    <table class=\"table table-condensed\">\n      <tr>\n        <td class=\"text-right\">Subtotal</td>\n        <td class=\"text-right\">{{ data.order.subtotal|currency:'USD':true }}</td>\n      </tr>\n      <tr>\n        <td class=\"text-right\">Shipping</td>\n        <td class=\"text-right\">$ 0.00</td>\n      </tr>\n      <tr>\n        <td class=\"text-right\">Total:</td>\n        <td class=\"text-right\">{{ data.order.subtotal|currency:'USD':true }}</td>\n      </tr>\n    </table>\n    <button class=\"btn btn-success\" (click)=\"onCheckout()\">Complete Purchase</button>\n    <a routerLink=\"/\" class=\"btn btn-info\">Cancel</a>\n  </div>\n\n</div>"
 
 /***/ }),
 
@@ -148,13 +148,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 var dataService_1 = __webpack_require__("./ClientApp/app/shared/dataService.ts");
+var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 var Checkout = /** @class */ (function () {
-    function Checkout(data) {
+    function Checkout(data, router) {
         this.data = data;
+        this.router = router;
+        this.errorMessage = "";
     }
     Checkout.prototype.onCheckout = function () {
-        // TODO
-        alert("Doing checkout");
+        var _this = this;
+        this.data.checkout()
+            .subscribe(function (success) {
+            if (success) {
+                _this.router.navigate(["/"]);
+            }
+        }, function (err) { return _this.errorMessage = "Failed to save order"; });
     };
     Checkout = __decorate([
         core_1.Component({
@@ -162,7 +170,7 @@ var Checkout = /** @class */ (function () {
             template: __webpack_require__("./ClientApp/app/checkout/checkout.component.html"),
             styles: [__webpack_require__("./ClientApp/app/checkout/checkout.component.css")]
         }),
-        __metadata("design:paramtypes", [dataService_1.DataService])
+        __metadata("design:paramtypes", [dataService_1.DataService, router_1.Router])
     ], Checkout);
     return Checkout;
 }());
@@ -279,6 +287,19 @@ var DataService = /** @class */ (function () {
             var tokenInfo = response.json();
             _this.token = tokenInfo.token;
             _this.tokenExpiration = tokenInfo.expiration;
+            return true;
+        });
+    };
+    DataService.prototype.checkout = function () {
+        var _this = this;
+        if (!this.order.orderNumber) {
+            this.order.orderNumber = this.order.orderDate.getFullYear().toString() + this.order.orderDate.getTime().toString();
+        }
+        return this.http.post("/api/orders", this.order, {
+            headers: new http_1.Headers({ "Authorization": "Bearer " + this.token })
+        })
+            .map(function (response) {
+            _this.order = new order_1.Order();
             return true;
         });
     };
