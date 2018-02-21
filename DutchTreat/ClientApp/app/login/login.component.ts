@@ -16,7 +16,6 @@ export class Login {
 
     onLogin() {
         //Call the login service
-        alert(this.creds.username);
-        this.creds.username += "!";
+
     }
 }
