@@ -16,6 +16,7 @@ var order_1 = require("./order");
 var DataService = /** @class */ (function () {
     function DataService(http) {
         this.http = http;
+        this.token = "";
         this.order = new order_1.Order();
         this.products = [];
     }
@@ -24,6 +25,13 @@ var DataService = /** @class */ (function () {
         return this.http.get("/api/products")
             .map(function (result) { return _this.products = result.json(); });
     };
+    Object.defineProperty(DataService.prototype, "loginRequired", {
+        get: function () {
+            return this.token.length == 0 || this.tokenExpiration > new Date();
+        },
+        enumerable: true,
+        configurable: true
+    });
     DataService.prototype.AddToOrder = function (product) {
         if (!this.order) {
             this.order = new order_1.Order();
