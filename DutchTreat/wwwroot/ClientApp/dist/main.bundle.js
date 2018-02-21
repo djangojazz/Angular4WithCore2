@@ -167,11 +167,20 @@ exports.DataService = DataService;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
+var _ = __webpack_require__("./node_modules/lodash/lodash.js");
 var Order = /** @class */ (function () {
     function Order() {
         this.orderDate = new Date();
         this.items = new Array();
     }
+    Object.defineProperty(Order.prototype, "subtotal", {
+        get: function () {
+            return _.sum(_.map(this.items, function (i) { return i.unitPrice * i.quantity; }));
+        },
+        enumerable: true,
+        configurable: true
+    });
+    ;
     return Order;
 }());
 exports.Order = Order;
@@ -188,7 +197,7 @@ exports.OrderItem = OrderItem;
 /***/ "./ClientApp/app/shop/cart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h3>Shopping Cart</h3>\r\n<div>#/Items: {{data.order.items.length }}</div>\r\n<table class=\"table table-condensed table-hover\">\r\n    <thead>\r\n        <tr>\r\n            <td>Product</td>\r\n            <td>#</td>\r\n            <td>$</td>\r\n            <td>Total</td>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr *ngFor=\"let o of data.order.items\">\r\n            <td>{{o.productCategory }} - {{o.productTitle}} </td>\r\n            <td>{{o.quantity }}</td>\r\n            <td>{{o.unitPrice | currency:\"USD\":true }}</td>\r\n            <td>{{ (o.unitPrice * o.quantity) | currency:\"USD\":true }}</td>\r\n        </tr>\r\n    </tbody>\r\n</table>"
+module.exports = "<h3>Shopping Cart</h3>\r\n<div>#/Items: {{data.order.items.length }}</div>\r\n<div>Subtotal: {{data.order.subtotal | currency:\"USD\":true }}</div>\r\n<table class=\"table table-condensed table-hover\">\r\n    <thead>\r\n        <tr>\r\n            <td>Product</td>\r\n            <td>#</td>\r\n            <td>$</td>\r\n            <td>Total</td>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr *ngFor=\"let o of data.order.items\">\r\n            <td>{{o.productCategory }} - {{o.productTitle}} </td>\r\n            <td>{{o.quantity }}</td>\r\n            <td>{{o.unitPrice | currency:\"USD\":true }}</td>\r\n            <td>{{ (o.unitPrice * o.quantity) | currency:\"USD\":true }}</td>\r\n        </tr>\r\n    </tbody>\r\n</table>"
 
 /***/ }),
 
