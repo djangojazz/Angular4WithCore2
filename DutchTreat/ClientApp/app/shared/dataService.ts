@@ -24,6 +24,16 @@ export class DataService {
         return this.token.length == 0 || this.tokenExpiration > new Date();
     }
 
+    public login(creds) {
+        return this.http.post("/account/createtoken", creds)
+            .map(response => {
+                let tokenInfo = response.json();
+                this.token = tokenInfo.token;
+                this.tokenExpiration = tokenInfo.expiration;
+                return true;
+            });
+    }
+
     public AddToOrder(product: Product) {
         if (!this.order) {
             this.order = new Order();
