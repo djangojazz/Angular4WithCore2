@@ -136,10 +136,17 @@ exports.DataService = DataService;
 
 /***/ }),
 
+/***/ "./ClientApp/app/shop/productList.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ".product-info img {\r\n    max-width: 100px;\r\n    float: left;\r\n    margin: 0 2px;\r\n    border: solid 1px black;\r\n}\r\n\r\n.product-info .product-name {\r\n    font-size: large;\r\n    font-weight: bold;\r\n}"
+
+/***/ }),
+
 /***/ "./ClientApp/app/shop/productList.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\r\n    <ul>\r\n        <li *ngFor=\"let p of products\">{{p.title}}: {{p.price | currency:\"USD\":true}}</li>\r\n    </ul>\r\n</div>"
+module.exports = "<div class=\"row\">\r\n    <div class=\"product-info col-md-4 well well-sm\" *ngFor=\"let p of products\" >\r\n        <img src=\"/img/{{p.artId}}.jpg\" class=\"img-responsive\" [alt]=\"p.title\" />\r\n        <div class=\"product-name\">{{p.category}} - {{p.size}}</div>\r\n            <div><strong>Price</strong> {{p.price | currency:\"USD\":true}}</div>\r\n            <div><strong>Artist</strong> {{p.artist}}</div>\r\n            <div><strong>Title</strong> {{p.title}}</div>\r\n            <div>Description: {{p.artDescription}}</div>\r\n        <button id=\"buyButton\" class=\"btn btn-success btn-sm pull-right\">Buy</button>\r\n    </div>\r\n</div>"
 
 /***/ }),
 
@@ -175,7 +182,7 @@ var ProductList = /** @class */ (function () {
         core_1.Component({
             selector: "product-list",
             template: __webpack_require__("./ClientApp/app/shop/productList.component.html"),
-            styleUrls: []
+            styles: [__webpack_require__("./ClientApp/app/shop/productList.component.css")]
         }),
         __metadata("design:paramtypes", [dataService_1.DataService])
     ], ProductList);
