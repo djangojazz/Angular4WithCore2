@@ -20,7 +20,7 @@ webpackEmptyAsyncContext.id = "./ClientApp/$$_lazy_route_resource lazy recursive
 /***/ "./ClientApp/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\r\n    <div class=\"col-md-9\">\r\n        <h3>{{title}}</h3>\r\n        <product-list></product-list>\r\n    </div>\r\n    <div class=\"col-md-3\">\r\n        <div class=\"well well-sm\">\r\n            <the-cart></the-cart>\r\n        </div>\r\n    </div>\r\n</div>"
+module.exports = "<router-outlet></router-outlet>"
 
 /***/ }),
 
@@ -74,6 +74,13 @@ var app_component_1 = __webpack_require__("./ClientApp/app/app.component.ts");
 var productList_component_1 = __webpack_require__("./ClientApp/app/shop/productList.component.ts");
 var dataService_1 = __webpack_require__("./ClientApp/app/shared/dataService.ts");
 var cart_component_1 = __webpack_require__("./ClientApp/app/shop/cart.component.ts");
+var shop_component_1 = __webpack_require__("./ClientApp/app/shop/shop.component.ts");
+var checkout_component_1 = __webpack_require__("./ClientApp/app/checkout/checkout.component.ts");
+var router_1 = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
+var routes = [
+    { path: "", component: shop_component_1.Shop },
+    { path: "checkout", component: checkout_component_1.Checkout }
+];
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
@@ -82,11 +89,17 @@ var AppModule = /** @class */ (function () {
             declarations: [
                 app_component_1.AppComponent,
                 productList_component_1.ProductList,
-                cart_component_1.Cart
+                cart_component_1.Cart,
+                shop_component_1.Shop,
+                checkout_component_1.Checkout
             ],
             imports: [
                 platform_browser_1.BrowserModule,
-                http_1.HttpModule
+                http_1.HttpModule,
+                router_1.RouterModule.forRoot(routes, {
+                    useHash: true,
+                    enableTracing: true // for Debugging of the Routes
+                })
             ],
             providers: [dataService_1.DataService],
             bootstrap: [app_component_1.AppComponent]
@@ -95,6 +108,60 @@ var AppModule = /** @class */ (function () {
     return AppModule;
 }());
 exports.AppModule = AppModule;
+
+
+/***/ }),
+
+/***/ "./ClientApp/app/checkout/checkout.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ".checkout-thumb {\n  max-width: 100px;\n}\n"
+
+/***/ }),
+
+/***/ "./ClientApp/app/checkout/checkout.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"row\">\n  <h3>Confirm Order</h3>\n  <table class=\"table table-bordered table-hover\">\n    <tr *ngFor=\"let o of data.order.items\">\n      <td><img src=\"/img/{{ o.productArtId }}.jpg\" alt=\"o.productTitle\" class=\"img-thumbnail checkout-thumb\" /></td>\n      <td>{{ o.productCategory }}({{ o.productSize }}) - {{ o.productArtist }}: {{ o.productTitle }}</td>\n      <td>{{ o.quantity }}</td>\n      <td>{{ o.unitPrice|currency:'USD':true }}</td>\n      <td>{{ (o.unitPrice * o.quantity)|currency:'USD':true }}</td>\n    </tr>\n  </table>\n  <div class=\"col-md-4 col-md-offset-8 text-right\">\n    <table class=\"table table-condensed\">\n      <tr>\n        <td class=\"text-right\">Subtotal</td>\n        <td class=\"text-right\">{{ data.order.subtotal|currency:'USD':true }}</td>\n      </tr>\n      <tr>\n        <td class=\"text-right\">Shipping</td>\n        <td class=\"text-right\">$ 0.00</td>\n      </tr>\n      <tr>\n        <td class=\"text-right\">Total:</td>\n        <td class=\"text-right\">{{ data.order.subtotal|currency:'USD':true }}</td>\n      </tr>\n    </table>\n    <button class=\"btn btn-success\" (click)=\"onCheckout()\">Complete Purchase</button>\n    <a routerLink=\"/\" class=\"btn btn-info\">Cancel</a>\n  </div>\n\n</div>"
+
+/***/ }),
+
+/***/ "./ClientApp/app/checkout/checkout.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var dataService_1 = __webpack_require__("./ClientApp/app/shared/dataService.ts");
+var Checkout = /** @class */ (function () {
+    function Checkout(data) {
+        this.data = data;
+    }
+    Checkout.prototype.onCheckout = function () {
+        // TODO
+        alert("Doing checkout");
+    };
+    Checkout = __decorate([
+        core_1.Component({
+            selector: "checkout",
+            template: __webpack_require__("./ClientApp/app/checkout/checkout.component.html"),
+            styles: [__webpack_require__("./ClientApp/app/checkout/checkout.component.css")]
+        }),
+        __metadata("design:paramtypes", [dataService_1.DataService])
+    ], Checkout);
+    return Checkout;
+}());
+exports.Checkout = Checkout;
 
 
 /***/ }),
@@ -197,7 +264,7 @@ exports.OrderItem = OrderItem;
 /***/ "./ClientApp/app/shop/cart.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h3>Shopping Cart</h3>\r\n<div>#/Items: {{data.order.items.length }}</div>\r\n<div>Subtotal: {{data.order.subtotal | currency:\"USD\":true }}</div>\r\n<table class=\"table table-condensed table-hover\">\r\n    <thead>\r\n        <tr>\r\n            <td>Product</td>\r\n            <td>#</td>\r\n            <td>$</td>\r\n            <td>Total</td>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr *ngFor=\"let o of data.order.items\">\r\n            <td>{{o.productCategory }} - {{o.productTitle}} </td>\r\n            <td>{{o.quantity }}</td>\r\n            <td>{{o.unitPrice | currency:\"USD\":true }}</td>\r\n            <td>{{ (o.unitPrice * o.quantity) | currency:\"USD\":true }}</td>\r\n        </tr>\r\n    </tbody>\r\n</table>"
+module.exports = "<h3>Shopping Cart</h3>\r\n<div>#/Items: {{data.order.items.length }}</div>\r\n<div>Subtotal: {{data.order.subtotal | currency:\"USD\":true }}</div>\r\n<table class=\"table table-condensed table-hover\">\r\n    <thead>\r\n        <tr>\r\n            <td>Product</td>\r\n            <td>#</td>\r\n            <td>$</td>\r\n            <td>Total</td>\r\n        </tr>\r\n    </thead>\r\n    <tbody>\r\n        <tr *ngFor=\"let o of data.order.items\">\r\n            <td>{{o.productCategory }} - {{o.productTitle}} </td>\r\n            <td>{{o.quantity }}</td>\r\n            <td>{{o.unitPrice | currency:\"USD\":true }}</td>\r\n            <td>{{ (o.unitPrice * o.quantity) | currency:\"USD\":true }}</td>\r\n        </tr>\r\n    </tbody>\r\n</table>\r\n<a routerLink=\"checkout\" class=\"btn btn-success\" *ngIf=\"data.order.items.length > 0\">Checkout</a>"
 
 /***/ }),
 
@@ -293,6 +360,42 @@ var ProductList = /** @class */ (function () {
     return ProductList;
 }());
 exports.ProductList = ProductList;
+
+
+/***/ }),
+
+/***/ "./ClientApp/app/shop/shop.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"row\">\r\n    <div class=\"col-md-9\">\r\n        <h3>{{title}}</h3>\r\n        <product-list></product-list>\r\n    </div>\r\n    <div class=\"col-md-3\">\r\n        <div class=\"well well-sm\">\r\n            <the-cart></the-cart>\r\n        </div>\r\n    </div>\r\n</div>"
+
+/***/ }),
+
+/***/ "./ClientApp/app/shop/shop.component.ts":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var core_1 = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var Shop = /** @class */ (function () {
+    function Shop() {
+    }
+    Shop = __decorate([
+        core_1.Component({
+            selector: "the-shop",
+            template: __webpack_require__("./ClientApp/app/shop/shop.component.html")
+        })
+    ], Shop);
+    return Shop;
+}());
+exports.Shop = Shop;
 
 
 /***/ }),

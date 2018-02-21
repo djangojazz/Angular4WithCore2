@@ -6,16 +6,30 @@ import { AppComponent } from './app.component';
 import { ProductList } from "./shop/productList.component";
 import { DataService } from "./shared/dataService";
 import { Cart } from "./shop/cart.component";
+import { Shop } from "./shop/shop.component";
+import { Checkout } from "./checkout/checkout.component";
+import { RouterModule } from "@angular/router";
+
+let routes = [
+    { path: "", component: Shop },
+    { path: "checkout", component: Checkout }
+];
 
 @NgModule({
   declarations: [
       AppComponent,
       ProductList,
-      Cart
+      Cart,
+      Shop,
+      Checkout
   ],
   imports: [
       BrowserModule,
-      HttpModule
+      HttpModule,
+      RouterModule.forRoot(routes, {
+          useHash: true,
+          enableTracing: true // for Debugging of the Routes
+      })
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

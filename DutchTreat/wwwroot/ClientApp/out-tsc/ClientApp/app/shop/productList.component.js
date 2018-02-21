@@ -22,6 +22,9 @@ var ProductList = /** @class */ (function () {
         this.data.loadProducts()
             .subscribe(function () { return _this.products = _this.data.products; });
     };
+    ProductList.prototype.addProduct = function (product) {
+        this.data.AddToOrder(product);
+    };
     ProductList = __decorate([
         core_1.Component({
             selector: "product-list",
