@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Entities\" />
+    <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
