@@ -34,5 +34,12 @@
   <ItemGroup>
     <TypeScriptCompile Include="wwwroot\ts\main.ts" />
   </ItemGroup>
+
+  <Target Name="MyPublishScripts" BeforeTargets="BeforePublish">
+    <Exec Command="npm install" />
+    <Exec Command="bower install" />
+    <Exec Command="gulp" />
+    <Exec Command="ng build" />
+  </Target>
   
 </Project>
