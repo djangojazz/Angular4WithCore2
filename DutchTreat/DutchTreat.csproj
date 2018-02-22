@@ -9,6 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Views\App\About.cshtml" />
     <None Include="Views\App\Shop.cshtml" />
     <None Include="wwwroot\index.html" />
@@ -23,6 +27,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Entities\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\dist\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
