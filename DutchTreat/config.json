@@ -2,6 +2,7 @@
   "Colors": {
     "Favorite": "blue"
   },
+  "DisableSSL": false,
   "ConnectionStrings": {
     "DutchConnectionString": "server=.\\SqlExpress;Database=DutchTreatDb;Integrated Security=true;MultipleActiveResultSets=true"
   },
